@@ -1,0 +1,29 @@
+{
+  "name": "sdl-translate",
+  "version": "0.0.1",
+  "description": "Text translations using SDL Language Cloud.",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "dependencies": {
+    "request": "^2.88.0",
+    "node-sanitize-options": "^0.0.6"
+  },
+  "engines": {
+    "node": "8.x"
+  },
+  "repository": {
+    "url": "https://github.com/animatedcreativity/sdl-translate"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "sdl",
+    "translate",
+    "language",
+    "cloud",
+    "translations",
+    "texts"
+  ]
+}
