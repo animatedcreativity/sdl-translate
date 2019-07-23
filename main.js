@@ -1,8 +1,11 @@
 exports = module.exports = function(config) {
+  var jsdom = require("jsdom");
+  var { JSDOM } = jsdom;
   var sanitize = require("node-sanitize-options");
   config = sanitize.options(config, require("./config.js")());
   var request = require("request");
   var mod = {
+    wrapper: require("node-promise-wrapper"),
     languages: function() {
       return new Promise(function(resolve, reject) {
         if (config.server.use !== true) {
@@ -49,7 +52,20 @@ exports = module.exports = function(config) {
       });
     },
     translate: function(text, fromCode, toCode) {
-      return new Promise(function(resolve, reject) {
+      return new Promise(async function(resolve, reject) {
+        var dom = new JSDOM(text);
+        var nodes = dom.window.document.querySelectorAll("body, body *");
+        if (nodes.length > 1) {
+          for (var i=0; i<=nodes.length-1; i++) {
+            var node = nodes[i];
+            if (node.children.length === 0) {
+              var {nodeText} = await mod.wrapper("nodeText", mod.translate(node.textContent, fromCode, toCode));
+              if (typeof nodeText !== "undefined") node.textContent = nodeText;
+            }
+          }
+          resolve(dom.window.document.querySelector("body").innerHTML);
+          return false;
+        }
         if (config.server.use !== true) {
           var headers = {
             "Accept": "application/json",
@@ -71,7 +87,7 @@ exports = module.exports = function(config) {
             if (typeof response !== "undefined" && typeof response.headers.tr_id !== "undefined" && typeof body !== "undefined") {
               try {
                 var result = JSON.parse(body);
-                resolve(result);
+                resolve(result.translation);
               } catch (error) {
                 reject(body);
               }

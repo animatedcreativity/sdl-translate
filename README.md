@@ -3,6 +3,8 @@
 Text translations using SDL Language Cloud.  
 See also: https://www.npmjs.com/package/sdl-translate-server
 
+Can translate full HTML documents now from ^0.0.4.
+
 ### Usage
 
 ```
