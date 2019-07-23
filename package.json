@@ -1,6 +1,6 @@
 {
   "name": "sdl-translate",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Text translations using SDL Language Cloud.",
   "main": "main.js",
   "scripts": {
@@ -11,7 +11,9 @@
     "node-sanitize-options": "^0.0.6",
     "jsdom": "^15.1.1",
     "node-promise-wrapper": "^0.0.2",
-    "randomstring": "^1.1.5"
+    "randomstring": "^1.1.5",
+    "pouchdb": "^7.0.0",
+    "pouchdb-find": "^7.0.0"
   },
   "engines": {
     "node": "8.x"
