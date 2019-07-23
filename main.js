@@ -91,8 +91,8 @@ exports = module.exports = function(config) {
               if (typeof response !== "undefined" && typeof response.headers.tr_id !== "undefined" && typeof body !== "undefined") {
                 try {
                   var result = JSON.parse(body);
-                  resolve(result.translation);
-                  if (config.offline.use === true) await mod.wrapper("result", mod.db.save({text: text, from: fromCode, to: toCode, translation: result.translation, time: new Date().getTime()}, config.offline.database));
+                  resolve(typeof result.translation !== "undefined" ? result.translation : text);
+                  if (config.offline.use === true) await mod.wrapper("result", mod.db.save({text: text, from: fromCode, to: toCode, translation: (typeof result.translation !== "undefined" ? result.translation : text), time: new Date().getTime()}, config.offline.database));
                 } catch (error) {
                   reject(body);
                 }
