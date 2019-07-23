@@ -66,53 +66,61 @@ exports = module.exports = function(config) {
           resolve(dom.window.document.querySelector("body").innerHTML);
           return false;
         }
-        if (config.server.use !== true) {
-          var headers = {
-            "Accept": "application/json",
-            "Content-type": "application/json",
-            "Authorization": "LC apiKey=" + config.key,
-          };
+        if (config.offline.use === true) var {result} = await mod.wrapper("result", mod.db.record({text: text, from: fromCode, to: toCode}, config.database));
+        if (typeof result !== "undefined" && config.offline.use === true) {
+          resolve(result.translation);
         } else {
-          var headers = {
-            "Content-type": "application/json",
-            "Authorization": config.server.authorization,
-          };
-        }
-        request.post({url: (config.server.use !== true ? config.link : config.server.link) + "/translate", body: JSON.stringify({
-          text: text,
-          from: fromCode,
-          to: toCode
-        }), headers: headers}, function(error, response, body) {
           if (config.server.use !== true) {
-            if (typeof response !== "undefined" && typeof response.headers.tr_id !== "undefined" && typeof body !== "undefined") {
-              try {
-                var result = JSON.parse(body);
-                resolve(result.translation);
-              } catch (error) {
-                reject(body);
-              }
-            } else {
-              reject(false);
-            }
+            var headers = {
+              "Accept": "application/json",
+              "Content-type": "application/json",
+              "Authorization": "LC apiKey=" + config.key,
+            };
           } else {
-            if (typeof response !== "undefined" && typeof body !== "undefined") {
-              try {
-                var result = JSON.parse(body);
-                if (result.status === 200 && typeof result.message !== "undefined") {
-                  resolve(result.message);
-                } else {
-                  reject(result);
+            var headers = {
+              "Content-type": "application/json",
+              "Authorization": config.server.authorization,
+            };
+          }
+          request.post({url: (config.server.use !== true ? config.link : config.server.link) + "/translate", body: JSON.stringify({
+            text: text,
+            from: fromCode,
+            to: toCode
+          }), headers: headers}, async function(error, response, body) {
+            if (config.server.use !== true) {
+              if (typeof response !== "undefined" && typeof response.headers.tr_id !== "undefined" && typeof body !== "undefined") {
+                try {
+                  var result = JSON.parse(body);
+                  resolve(result.translation);
+                  if (config.offline.use === true) await mod.wrapper("result", mod.db.save({text: text, from: fromCode, to: toCode, translation: result.translation, time: new Date().getTime()}, config.database));
+                } catch (error) {
+                  reject(body);
                 }
-              } catch (error) {
-                reject(body);
+              } else {
+                reject(false);
               }
             } else {
-              reject(false);
+              if (typeof response !== "undefined" && typeof body !== "undefined") {
+                try {
+                  var result = JSON.parse(body);
+                  if (result.status === 200 && typeof result.message !== "undefined") {
+                    resolve(result.message);
+                    if (config.offline.use === true) await mod.wrapper("result", mod.db.save({text: text, from: fromCode, to: toCode, translation: result.message, time: new Date().getTime()}, config.database));
+                  } else {
+                    reject(result);
+                  }
+                } catch (error) {
+                  reject(body);
+                }
+              } else {
+                reject(false);
+              }
             }
-          }
-        });
+          });
+        }
       });
     }
   };
+  mod.db = require("./db.js")(mod, config);
   return mod;
 };

@@ -1,6 +1,6 @@
 {
   "name": "sdl-translate",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Text translations using SDL Language Cloud.",
   "main": "main.js",
   "scripts": {

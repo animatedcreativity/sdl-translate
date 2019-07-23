@@ -7,6 +7,10 @@ exports = module.exports = function() {
       use: false,
       link: "https://<your_server_name>/translate",
       authorization: "<your_server_authorization_key>", // Lowercase
+    },
+    offline: {
+      use: false,
+      database: "database/translations"
     }
   };
 };
