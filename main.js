@@ -33,7 +33,8 @@ exports = module.exports = function(config) {
               try {
                 var result = JSON.parse(body);
                 if (result.status === 200 && typeof result.message !== "undefined") {
-                  resolve(result.message);
+                  result = JSON.parse(result.message);
+                  resolve(result);
                 } else {
                   reject(result);
                 }
@@ -82,7 +83,8 @@ exports = module.exports = function(config) {
               try {
                 var result = JSON.parse(body);
                 if (result.status === 200 && typeof result.message !== "undefined") {
-                  resolve(result.message);
+                  result = JSON.parse(result.message);
+                  resolve(result);
                 } else {
                   reject(result);
                 }
