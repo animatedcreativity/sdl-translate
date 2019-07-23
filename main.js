@@ -66,7 +66,7 @@ exports = module.exports = function(config) {
           resolve(dom.window.document.querySelector("body").innerHTML);
           return false;
         }
-        if (config.offline.use === true) var {result} = await mod.wrapper("result", mod.db.record({text: text, from: fromCode, to: toCode}, config.offline.name));
+        if (config.offline.use === true) var {result} = await mod.wrapper("result", mod.db.record({text: text, from: fromCode, to: toCode}, config.offline.database));
         if (typeof result !== "undefined" && config.offline.use === true) {
           resolve(result.translation);
         } else {
@@ -92,7 +92,7 @@ exports = module.exports = function(config) {
                 try {
                   var result = JSON.parse(body);
                   resolve(result.translation);
-                  if (config.offline.use === true) await mod.wrapper("result", mod.db.save({text: text, from: fromCode, to: toCode, translation: result.translation, time: new Date().getTime()}, config.offline.name));
+                  if (config.offline.use === true) await mod.wrapper("result", mod.db.save({text: text, from: fromCode, to: toCode, translation: result.translation, time: new Date().getTime()}, config.offline.database));
                 } catch (error) {
                   reject(body);
                 }
@@ -105,7 +105,7 @@ exports = module.exports = function(config) {
                   var result = JSON.parse(body);
                   if (result.status === 200 && typeof result.message !== "undefined") {
                     resolve(result.message);
-                    if (config.offline.use === true) await mod.wrapper("result", mod.db.save({text: text, from: fromCode, to: toCode, translation: result.message, time: new Date().getTime()}, config.offline.name));
+                    if (config.offline.use === true) await mod.wrapper("result", mod.db.save({text: text, from: fromCode, to: toCode, translation: result.message, time: new Date().getTime()}, config.offline.database));
                   } else {
                     reject(result);
                   }
