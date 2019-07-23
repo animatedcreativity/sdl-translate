@@ -99,8 +99,7 @@ exports = module.exports = function(config) {
               try {
                 var result = JSON.parse(body);
                 if (result.status === 200 && typeof result.message !== "undefined") {
-                  result = JSON.parse(result.message);
-                  resolve(result);
+                  resolve(result.message);
                 } else {
                   reject(result);
                 }
