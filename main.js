@@ -59,8 +59,8 @@ exports = module.exports = function(config) {
           for (var i=0; i<=nodes.length-1; i++) {
             var node = nodes[i];
             if (node.children.length === 0) {
-              var {nodeText} = await mod.wrapper("nodeText", mod.translate(node.textContent, fromCode, toCode));
-              if (typeof nodeText !== "undefined") node.textContent = nodeText;
+              var {nodeText} = await mod.wrapper("nodeText", mod.translate(node.innerHTML, fromCode, toCode));
+              if (typeof nodeText !== "undefined") node.innerHTML = nodeText;
             }
           }
           resolve(dom.window.document.querySelector("body").innerHTML);
