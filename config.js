@@ -10,7 +10,8 @@ exports = module.exports = function() {
     },
     offline: {
       use: false,
-      database: "database"
+      database: "database",
+      name: "translate"
     }
   };
 };
