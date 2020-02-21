@@ -47,3 +47,5 @@ translate.translate("This is a test line.", "eng", "swe").then(function(text) {
 
 For API key:  
 https://languagecloud.sdl.com/translation-toolkit/login?origin=xing&product=onlineeditor
+
+0.1.8: Fixed a bug not allowing to translate all text nodes for HTML content.

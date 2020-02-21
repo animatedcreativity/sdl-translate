@@ -55,13 +55,32 @@ exports = module.exports = function(config) {
       return new Promise(async function(resolve, reject) {
         var dom = new JSDOM(text);
         var nodes = dom.window.document.querySelectorAll("body, body *");
+        // console.log(dom.window.document.documentElement.outerHTML, nodes.length);
         if (nodes.length > 1) {
           for (var i=0; i<=nodes.length-1; i++) {
             var node = nodes[i];
-            if (node.children.length === 0) {
-              var {nodeText} = await mod.wrapper("nodeText", mod.translate(node.innerHTML, fromCode, toCode));
-              if (typeof nodeText !== "undefined") node.innerHTML = nodeText;
+            for (var c=0; c<=node.childNodes.length-1; c++) {
+              var childNode = node.childNodes[c];
+              if (typeof childNode.tagName === "undefined") {
+                if (childNode.nodeValue !== "undefined" && childNode.nodeValue.trim() !== "") {
+                  var {nodeText} = await mod.wrapper("nodeText", mod.translate(childNode.nodeValue, fromCode, toCode));
+                  if (typeof nodeText !== "undefined") {
+                    console.log("test: ", childNode.nodeValue, nodeText, fromCode, toCode);
+                    childNode.nodeValue = nodeText;
+                  }
+                }
+              }
             }
+            // if (node.children.length === 0) {
+            //   console.log(node.tagName, node.innerHTML, i);
+            //   var {nodeText} = await mod.wrapper("nodeText", mod.translate(node.innerHTML, fromCode, toCode));
+            //   if (typeof nodeText !== "undefined") {
+            //     // console.log("test: ", node.innerHTML, nodeText, fromCode, toCode);
+            //     node.innerHTML = nodeText;
+            //   }
+            // } else {
+            //   console.log(node.tagName);
+            // }
           }
           resolve(dom.window.document.querySelector("body").innerHTML);
           return false;
